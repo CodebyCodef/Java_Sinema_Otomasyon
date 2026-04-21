@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="520.0" prefWidth="663.0" stylesheets="@css/dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sinemabiletotomasyon.DashboardScreenController">
+   <children>
+      <Label alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="115.0" text="Dashboard">
+         <font>
+            <Font name="Lucida Sans Demibold Roman" size="20.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" prefHeight="151.0" prefWidth="626.0">
+         <children>
+            <AnchorPane prefHeight="151.0" prefWidth="265.0">
+               <children>
+            
+                        <ImageView id="pinIMG" fitHeight="99.0" fitWidth="99.0" layoutX="208.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" styleClass="pinImg">
+                     <image>
+                        <Image url="@img/pin.png"> </Image>
+                     </image>
+            
+                        </ImageView>
+            
+                        <Label fx:id="sumCityLabel" alignment="CENTER_LEFT" layoutX="208.0" layoutY="-8.0" text="12 Adet Sehir">
+                     <font>
+                        <Font name="Lucida Bright" size="15.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane layoutX="-75.0" layoutY="2.0" prefHeight="151.0" prefWidth="136.0">
+                     <children>
+            
+                                    <Label fx:id="sumCinemaLabel" alignment="CENTER" layoutX="78.0" layoutY="-10.0" text="12 Adet Sinema Salonu">
+                           <font>
+                              <Font name="Lucida Bright" size="15.0" />
+                           </font>
+                        </Label>
+            
+                                          <ImageView fx:id="hallIMG" fitHeight="99.0" fitWidth="138.0" layoutX="113.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true" styleClass="hallImg">
+                           <image>
+                              <Image url="@img/hall.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <GridPane fx:id="movieGridPane" prefHeight="110.0" prefWidth="448.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+      <Pane prefHeight="218.0" prefWidth="612.0">
+         <children>
+            <ComboBox fx:id="cityComboBox" layoutX="113.0" layoutY="39.0" prefWidth="150.0" promptText="İl Seçiniz" styleClass="cityCombo" />
+            <ComboBox fx:id="cinemaComboBox" layoutX="292.0" layoutY="39.0" prefWidth="150.0" promptText="Salon Seçiniz" styleClass="cinemaCombo" />
+
+
+            <ImageView id="chairIMG" fitHeight="99.0" fitWidth="99.0" layoutX="213.0" layoutY="95.0" pickOnBounds="true" preserveRatio="true" styleClass="chairImg">
+
+                  <image>
+                     <Image url="@img/armchair.png">
+
+                     </Image>
+                  </image>
+
+            </ImageView>
+
+            <Pane layoutX="387.0" layoutY="90.0" prefHeight="110.0" prefWidth="110.0">
+               <children>
+                  <Label fx:id="emptySeatLabel" alignment="CENTER" layoutX="43.0" layoutY="14.0" text="15">
+                     <font>
+                        <Font name="Lucida Bright" size="27.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" layoutX="28.0" layoutY="61.0" text="Bos Koltuk">
+                     <font>
+                        <Font name="Lucida Bright" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <ComboBox fx:id="movieComboBox" layoutX="471.0" layoutY="39.0" prefWidth="150.0" promptText="Film Seçiniz" styleClass="movieCombo" />
+         </children>
+      </Pane>
+   </children>
+</VBox>

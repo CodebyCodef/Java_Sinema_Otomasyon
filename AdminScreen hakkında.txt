@@ -1,0 +1,17 @@
+
+
+city table 
+city_id , city_name
+
+cinnema table 
+cinema_id , cinema_name , city_id
+
+movie table 
+
+movie_id , movie_title , image_source 
+
+seans table 
+seans_id , cinema_id , movie_id , times 
+
+
+burada ki cinema_id , movie_id , seans_id autoincrement şeklinde 

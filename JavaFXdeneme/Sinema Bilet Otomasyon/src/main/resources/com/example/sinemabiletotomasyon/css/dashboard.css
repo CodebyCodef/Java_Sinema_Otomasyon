@@ -1,0 +1,23 @@
+.cityCombo, .cinemaCombo, .movieCombo {
+    -fx-background-color: white;
+    -fx-border-color: #666666;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-cursor: hand;
+}
+
+
+.movie-grid-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #222;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 2 4 2 4;
+    -fx-font-weight: bold; /* Kalın yazı */
+    -fx-font-family: "Segoe UI", "Arial", sans-serif; /* Modern font ailesi */
+    -fx-alignment: CENTER-RIGHT; /* Sağda ortalı */
+}

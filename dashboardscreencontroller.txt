@@ -1,0 +1,196 @@
+package com.example.sinemabiletotomasyon;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+
+
+import java.net.URL;
+import java.sql.*;
+import java.util.ResourceBundle;
+
+public class DashboardScreenController implements Initializable {
+
+    @FXML
+    private Label sumCinemaLabel;
+
+    @FXML
+    private Label sumCityLabel;
+    
+    @FXML
+    private ComboBox<String> cityComboBox;
+
+    @FXML
+    private ComboBox<String> cinemaComboBox;
+
+    @FXML
+    private ComboBox<String> movieComboBox;
+
+    @FXML
+    private Label emptySeatLabel;
+
+    private Connection connection;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        
+
+        connectToDatabase();
+        loadCities();
+        setupListeners();
+
+        int sehirSayisi = getCitySum(); // veritabanından veya başka yerden çek
+        int salonSayisi = getCinemaSum();
+
+        sumCityLabel.setText(sehirSayisi + " Adet Şehir");
+        sumCinemaLabel.setText(salonSayisi + " Adet Sinema Salonu");
+    }
+
+    private int getCitySum() {
+
+        int cityNum = 0;
+        try {
+            String sql = "SELECT  COUNT(DISTINCT city_name) as cityNum FROM city";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                cityNum = rs.getInt("cityNum");
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cityNum ;
+    }
+
+    private int getCinemaSum() {
+
+        int cinemaNum = 0;
+        try {
+            String sql = "SELECT COUNT(cinema_id) as cinemaNum FROM cinema";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                cinemaNum = rs.getInt("cinemaNum");
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cinemaNum;
+    }
+
+
+    }
+
+    private void connectToDatabase() {
+        String dbUrl = "jdbc:sqlserver://CODEF;databaseName=sinauto;encrypt=true;trustServerCertificate=true;";
+        String dbUser = "codef";
+        String dbPass = "codef123";
+
+        try {
+            connection = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+            System.out.println("Dashboard ekranında veritabanına bağlanıldı.");
+        } catch (SQLException e) {
+            System.out.println("Dashboard ekranında veritabanı bağlantı hatası: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCities() {
+        try {
+            String sql = "SELECT DISTINCT city_name FROM city";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cityComboBox.getItems().add(rs.getString("city_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupListeners() {
+        cityComboBox.setOnAction(e -> loadCinema());
+        cinemaComboBox.setOnAction(e -> loadMovies());
+        movieComboBox.setOnAction(e -> updateEmptySeats());
+    }
+
+    private void loadCinema() {
+        cinemaComboBox.getItems().clear();
+        String selectedCity = cityComboBox.getValue();
+        try {
+            String sql = "SELECT cinema_name FROM cinema WHERE city_id = (SELECT city_id FROM city WHERE city_name = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, selectedCity);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cinemaComboBox.getItems().add(rs.getString("cinema_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadMovies() {
+        movieComboBox.getItems().clear();
+        try {
+            String sql = "SELECT movie_title FROM movie";
+            ResultSet rs = connection.prepareStatement(sql).executeQuery();
+            while (rs.next()) {
+                movieComboBox.getItems().add(rs.getString("movie_title"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateEmptySeats() {
+        String city = cityComboBox.getValue();
+        String hall = cinemaComboBox.getValue();
+        String movie = movieComboBox.getValue();
+
+        int sumSeats = 15;
+
+        try {
+            String sql = """
+                SELECT COUNT(*) AS full_seats
+                FROM ticket
+                WHERE cinema_id = (
+                    SELECT cinema_id FROM cinema 
+                    WHERE cinema_name = ? AND city_id = (SELECT city_id FROM city WHERE city_name = ?)
+                )
+                AND seat_number NOT IN (
+                    SELECT seat_number FROM ticket
+                    WHERE seans_id IN (
+                        SELECT seans_id FROM seans WHERE movie_id = (SELECT movie_id FROM movie WHERE movie_name = ?)
+                    )
+                )
+            """;
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, hall);
+            stmt.setString(2, city);
+            stmt.setString(3, movie);
+            ResultSet rs = stmt.executeQuery();
+
+            int emptySeats
+            if (rs.next()) {
+                emptySeatLabel.setText(String.valueOf(rs.getInt("empty_seats")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
